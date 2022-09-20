@@ -3,7 +3,7 @@ import os
 import datetime
 from turtle import bgcolor
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-server_addres = ("192.168.70.123", 4447) # ToDo dodac do config file
+server_addres = ("192.168.70.126", 4447) # ToDo dodac do config file
 
 sock.sendto(b"", server_addres)
 
@@ -55,6 +55,7 @@ def print_is_measurments_working(flag):
 while True:
     data, addres = sock.recvfrom(4096)
     os.system('cls' if os.name == 'nt' else 'clear')
+    print(data)
     datas = data.decode("utf-8").split(",")
     print_time(datas[0])
     print_free_space(datas[1])
