@@ -3,7 +3,7 @@ import os
 import datetime
 from turtle import bgcolor
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-server_addres = ("192.168.70.126", 4447) # ToDo dodac do config file
+server_addres = ("192.168.70.123", 4447) # ToDo dodac do config file
 
 sock.sendto(b"", server_addres)
 

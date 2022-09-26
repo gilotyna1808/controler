@@ -6,6 +6,7 @@ Created on Mon Sep 12 11:39:13 2022
 @author: Daniel
 """
 from cmath import inf
+from genericpath import isfile
 import psutil
 import os
 from datetime import datetime
@@ -54,6 +55,18 @@ def get_time_until_full_disk(old_data_dir_size, data_dir_size, path):
         return int(free/change)
     return -1
 
+def get_pid_from_file(file):
+    if not os.path.isfile(file):
+        raise Exception("brak pliku")
+    try:
+        f = open(file,"r")
+        pid  = f.readline()
+        if not pid.isnumeric():
+            raise Exception("odczytany pid niejest liczba")
+        pid = int(pid)
+        return pid
+    finally:
+        f.close()
 
 # A = get_device_space('/dev/sda')
 # B = int(A[1])/int(A[0])
