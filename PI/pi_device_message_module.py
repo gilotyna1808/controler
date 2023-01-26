@@ -9,9 +9,9 @@ from datetime import datetime
 
 class raspberry_message():
 
-    def __init__(self, condition:Condition, start:bool=False):
+    def __init__(self, start:bool=False):
         #
-        self.condition = condition
+        self.condition = Condition()
         self.message_condition = Condition()
         #
         self.disk_module = disk_check(self.message_condition,True)
@@ -31,6 +31,9 @@ class raspberry_message():
                 self.message_condition.wait(1)
                 with self.condition: self.condition.notify()
 
+    def get_condition(self):
+        return self.condition
+
     def create_message(self):
         message = "00"
         message += f"{self.disk_module.get_if_space_less_10()}"
@@ -47,7 +50,7 @@ class raspberry_message():
         message = str(int(message,2))
         # message = "{:02x}".format(message).upper()
         check_sum = self.get_checksum(message)
-        now = datetime.now()
+        # now = datetime.now()
         # print(f"[CREATE MESSAGE] {now.hour}:{now.minute}:{now.second}.{now.microsecond}")
         return f"$PPI,{message}*{check_sum}".upper()
 

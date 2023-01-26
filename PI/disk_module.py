@@ -14,12 +14,9 @@ class disk_check:
             Thread(target=self.check_disk_space, daemon=True).start()
     
     def check_disk_space(self):
-        # i = 40#TODO
         while True:
             last_50,last_10 = (self.space_less_than_50,self.space_less_than_10)
             free_space = 100 - psutil.disk_usage("/").percent
-            # free_space = 100 - i#TODO
-            # i+=1#TODO
             if free_space < 10: self.space_less_than_10 = 1
             else: self.space_less_than_10 = 0
             if free_space < 50: self.space_less_than_50 = 1

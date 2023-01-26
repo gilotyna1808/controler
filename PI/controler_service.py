@@ -1,30 +1,32 @@
+#!/usr/bin/env python3
 import pi_device_message_module as pi
 import mag_module as mag
-from threading import Condition, Thread
-from datetime import datetime
-con = Condition()
-con2 = Condition()
+import socket
+from threading import Thread
 
-message = pi.raspberry_message(con,True)
-mag_message = mag.magnetometr_check(con2,True)
+diagnostics_server_address = ("192.168.70.147",42042)
 
-def temp(con):
-    while 1: 
-        with con:
-            now = datetime.now()
-            m =message.get_message()
-            # print(f"[CONTROL SERVICE PI] {now.hour}:{now.minute}:{now.second}.{now.microsecond}")
-            print(f"{m} BIN:{bin(int(m.split(',')[1][:-3]))}")
-            con.wait()        
+def send_pi_message(address):
+    raspberry_mesage = pi.raspberry_message(True)
+    condition = raspberry_mesage.get_condition()
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,0)
+    while True:
+        with condition:
+            message = raspberry_mesage.get_message()
+            sock.sendto(message.encode("utf-8"),address)
+            condition.wait()
 
-def aaa(con):
-   while 1: 
-        with con:
-            now = datetime.now()
-            # print(f"[CONTROL SERVICE MAG] {now.hour}:{now.minute}:{now.second}.{now.microsecond}")
-            m =mag_message.get_message()
-            print(f"{m} BIN:{bin(int(m.split(',')[1][:-3]))}")
-            con.wait()        
+def send_magdata(address):
+    magnetometr_message = mag.magnetometr_check(True)
+    condition = magnetometr_message.get_condition()
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,0)
+    while True:
+        with condition:
+            message = magnetometr_message.get_message()
+            sock.sendto(message.encode("utf-8"),address)
+            condition.wait()
 
-Thread(target=temp, args=(con,)).start()
-Thread(target=aaa, args=(con2,)).start()
+Thread(target=send_pi_message, args=(diagnostics_server_address,), daemon=True).start()
+Thread(target=send_magdata, args=(diagnostics_server_address,), daemon=True).start()
+
+while 1:True

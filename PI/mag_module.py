@@ -4,8 +4,8 @@ import json
 from threading import Thread, Condition
 
 class magnetometr_check():
-    def __init__(self,condition:Condition, start:bool=False) -> None:
-        self.conditions = condition
+    def __init__(self, start:bool=False):
+        self.conditions = Condition()
 
         #
         self.message = "$PMG,0000000000000000*00"
@@ -25,6 +25,9 @@ class magnetometr_check():
             except socket.timeout as ex:
                 print(f'[TIMEOUT]')
     
+    def get_condition(self):
+        return self.conditions
+
     def create_message(self, frame):
         message  = ""
         message += f"{self._get_critical_fault(frame)}"
