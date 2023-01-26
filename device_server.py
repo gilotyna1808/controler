@@ -11,5 +11,5 @@ while True:
     data = data.decode("utf-8").split(",")
     conn = (SOCKET_LISTENER, address)
     print(data)
-    sleep(10)
-    SOCKET_LISTENER.sendto("LOLALA".encode("utf-8"),address)
+    sleep(4)
+    SOCKET_LISTENER.sendto("done".encode("utf-8"),address)

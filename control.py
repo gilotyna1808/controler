@@ -57,12 +57,12 @@ def get_time_until_full_disk(old_data_dir_size, data_dir_size, path):
 
 def get_pid_from_file(file):
     if not os.path.isfile(file):
-        raise Exception("brak pliku")
+        raise Exception("file does not exist")
     try:
         f = open(file,"r")
         pid  = f.readline()
         if not pid.isnumeric():
-            raise Exception("odczytany pid niejest liczba")
+            raise Exception("pid is not a number")
         pid = int(pid)
         return pid
     finally:
